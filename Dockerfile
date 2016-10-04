@@ -17,8 +17,8 @@ RUN apt-get update \
 # Install Hadoop
 RUN mkdir -p "${HADOOP_HOME}" \
   && export ARCHIVE=hadoop-$HADOOP_VERSION.tar.gz \
-  && export DOWNLOAD_PATH=dist/hadoop/common/hadoop-$HADOOP_VERSION/$ARCHIVE \
-  && curl -sSL https://archive.apache.org/$DOWNLOAD_PATH | \
+  && export DOWNLOAD_PATH=apache/hadoop/common/hadoop-$HADOOP_VERSION/$ARCHIVE \
+  && curl -sSL https://mirrors.ocf.berkeley.edu/$DOWNLOAD_PATH | \
     tar -xz -C $HADOOP_HOME --strip-components 1 \
   && rm -rf $ARCHIVE
 

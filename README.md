@@ -1,16 +1,16 @@
 # Apache Hadoop
 
-An [Apache Hadoop](http://hadoop.apache.org) container image. This image is meant to be used for creating a standalone cluster with multiple workers.
+An [Apache Hadoop](http://hadoop.apache.org) container image. This image is meant to be used for creating a standalone cluster with multiple DataNodes.
 
 - [`2.7` (Dockerfile)](https://github.com/SingularitiesCR/hadoop-docker/blob/2.7/Dockerfile)
 
 ## Custom commands
 
-This image contains a script called `start-hadoop` (included in the PATH). This script is used to initialize NamaNodes and DataNodes.
+This image contains a script named `start-hadoop` (included in the PATH). This script is used to initialize NamaNodes and DataNodes.
 
 ### HDFS user
 
-The custom commands require an HDFS user to be set. The username if read from the `$HDFS_USER` environment variable and the user is automatically created by the commands.
+The custom commands require an HDFS user to be set. The user's name if read from the `HDFS_USER` environment variable and the user is automatically created by the commands.
 
 ### Starting a NameNode
 

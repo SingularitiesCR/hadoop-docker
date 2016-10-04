@@ -45,7 +45,7 @@ EXPOSE 8020 14000 50070 50470
 # MapReduce
 EXPOSE 10020 13562	19888
 
-# Copy entrypoint
+# Copy start script
 COPY start-hadoop /opt/util/bin/start-hadoop
 ENV PATH=$PATH:/opt/util/bin
 

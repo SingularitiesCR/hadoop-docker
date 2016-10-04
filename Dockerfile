@@ -1,0 +1,54 @@
+FROM openjdk:8-jre
+MAINTAINER Singularities
+
+# Version
+ENV HADOOP_VERSION=2.7.3
+
+# Set home
+ENV HADOOP_HOME=/usr/local/hadoop-$HADOOP_VERSION
+
+# Install dependencies
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install \
+    -yq --no-install-recommends netcat \
+  && apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install Hadoop
+RUN mkdir -p "${HADOOP_HOME}" \
+  && export ARCHIVE=hadoop-$HADOOP_VERSION.tar.gz \
+  && export DOWNLOAD_PATH=dist/hadoop/common/hadoop-$HADOOP_VERSION/$ARCHIVE \
+  && curl -sSL https://archive.apache.org/$DOWNLOAD_PATH | \
+    tar -xz -C $HADOOP_HOME --strip-components 1 \
+  && rm -rf $ARCHIVE
+
+# HDFS volume
+VOLUME /opt/hdfs
+
+# Set paths
+ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop \
+  HADOOP_LIBEXEC_DIR=$HADOOP_HOME/libexec \
+  PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+# Copy and fix configuration files
+COPY /conf/*.xml $HADOOP_CONF_DIR/
+RUN sed -i.bak "s/hadoop-daemons.sh/hadoop-daemon.sh/g" \
+    $HADOOP_HOME/sbin/start-dfs.sh \
+  && rm -f $HADOOP_HOME/sbin/start-dfs.sh.bak \
+  && sed -i.bak "s/hadoop-daemons.sh/hadoop-daemon.sh/g" \
+    $HADOOP_HOME/sbin/stop-dfs.sh \
+  && rm -f $HADOOP_HOME/sbin/stop-dfs.sh.bak
+
+# HDFS
+EXPOSE 8020 14000 50070 50470
+
+# MapReduce
+EXPOSE 10020 13562	19888
+
+# Copy entrypoint
+COPY start-hadoop /opt/util/bin/start-hadoop
+ENV PATH=$PATH:/opt/util/bin
+
+# Fix environment for other users
+RUN echo "export HADOOP_HOME=$HADOOP_HOME" >> /etc/bash.bashrc \
+  && echo 'export PATH=$PATH:$HADOOP_HOME/bin:/opt/util/bin'>> /etc/bash.bashrc

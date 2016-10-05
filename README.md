@@ -37,7 +37,7 @@ start-hadoop datanode [NameNode]
 The script supports running as a daemon if the `daemon` argument is passed as the last argument. This is useful when another command must be used or when the image is being used as the base for another image. To run a NameNode as a daemon use the following command:
 
 ```sh
-start-hadoop namenode daemon
+start-hadoop datanode [NameNode] daemon
 ```
 
 ## Creating a cluster with Docker Compose

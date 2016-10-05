@@ -26,7 +26,6 @@ main() {
 # Starts the Hadoop name node
 # Expects the daemon flag as a parameter
 start_namenode() {
-  echo 'Starting name node'
   # Start HDFS name node
   sed -i.bak "s|\[NAMENODE_HOST\]|$(hostname)|g" $HADOOP_CONF_DIR/core-site.xml
   rm -f $HADOOP_CONF_DIR/core-site.xml.bak
@@ -50,7 +49,6 @@ start_datanode() {
     echo "Name node host not specified" >&2
     exit 1
   fi
-  echo 'starting data node'
   # Wait for the name node to be online
   while ! nc -z $1 50070; do
     sleep 2;

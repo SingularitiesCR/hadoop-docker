@@ -77,12 +77,10 @@ The image has a volume mounted at `/opt/hdfs`. To maintain states between restar
 
 ### Scaling
 
-If you wish to increase the number of DataNodes scale the `datanode` service `scale` command like follows:
+If you wish to increase the number of DataNodes scale the `datanode` service by running the `scale` command like follows:
 
 ```sh
 docker-compose scale datanode=2
 ```
 
-The DataNodes will automatically register themselves with the DataNode node.
-
-
+The DataNodes will automatically register themselves with the NameNode.

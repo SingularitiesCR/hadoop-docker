@@ -11,7 +11,7 @@ main() {
   # Fix directory permissions
   chown -R $HDFS_USER:$HDFS_USER /opt/hdfs
   # Set user
-  su $HDF_USER
+  su $HDFS_USER
   # Select node type
   if [[ "${1}" = 'namenode' ]]; then
     start_namenode $2

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Starts the Hadoop name node. Expects the daemon flag as a parameter
+
+source /etc/bash.bashrc
+
+# Repalce namenode host in core-site.xml
+sed -i.bak "s|\[NAMENODE_HOST\]|$(hostname)|g" $HADOOP_CONF_DIR/core-site.xml
+rm -f $HADOOP_CONF_DIR/core-site.xml.bak
+# Format namenode
+if [ ! -f /opt/hdfs/name/current/VERSION ]; then
+  hdfs namenode -format -force
+fi
+# Start HDFS service
+start-dfs.sh
+# Fix permissions for root directory
+hdfs dfs -chown $HDFS_USER:$HDFS_USER /
+# Start daemon if specified
+if [[ "${1}" != 'daemon' ]]; then
+  sleep infinity
+fi

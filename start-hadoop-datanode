@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Starts the Hadoop data node. Expects the name node host and the daemon flag
+# as parameters
+
+source /etc/bash.bashrc
+
+if [[ -z "${1}" ]]; then
+  echo "Name node host not specified" >&2
+  exit 1
+fi
+# Wait for the name node to be online
+while ! nc -z $1 50070; do
+  sleep 2;
+done;
+# Start HDFS data node
+sed -i.bak "s|\[NAMENODE_HOST\]|${1}|g" $HADOOP_CONF_DIR/core-site.xml
+rm -f $HADOOP_CONF_DIR/core-site.xml.bak
+hadoop-daemon.sh start datanode
+# Start daemon if specified
+if [[ "${2}" != 'daemon' ]]; then
+  sleep infinity
+fi

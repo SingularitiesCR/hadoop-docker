@@ -1,66 +1,21 @@
 #!/usr/bin/env bash
 
-main() {
-  # Check user environment variable
-   if [[ -z "${HDFS_USER}" ]]; then
-    echo "Missing HDFS_USER environment variable" >&2
-    exit 1
-  fi
-  # Create user for HDFS
-  adduser --no-create-home --disabled-password --gecos "" $HDFS_USER
-  # Fix directory permissions
-  chown -R $HDFS_USER:$HDFS_USER /opt/hdfs
-  # Set user
-  su $HDFS_USER
-  # Select node type
-  if [[ "${1}" = 'namenode' ]]; then
-    start_namenode $2
-  elif [[ "${1}" =  'datanode' ]]; then
-    start_datanode $2 $3
-  else
-    echo "Invalid command '${1}'" >&2
-    exit 1
-  fi
-}
-
-# Starts the Hadoop name node
-# Expects the daemon flag as a parameter
-start_namenode() {
-  # Start HDFS name node
-  sed -i.bak "s|\[NAMENODE_HOST\]|$(hostname)|g" $HADOOP_CONF_DIR/core-site.xml
-  rm -f $HADOOP_CONF_DIR/core-site.xml.bak
-  if [ ! -f /opt/hdfs/name/current/VERSION ]; then
-    hdfs namenode -format -force
-  fi
-  # Start HDFS service
-  start-dfs.sh
-  # Fix permissions for root directory
-  hdfs dfs -chown $HDFS_USER:$HDFS_USER /
-  # Start daemon if specified
-  if [[ "${1}" != 'daemon' ]]; then
-    sleep infinity
-  fi
-}
-
-# Starts the Hadoop data node
-# Expects the name node host and the daemon flag as parameters
-start_datanode() {
-  if [[ -z "${1}" ]]; then
-    echo "Name node host not specified" >&2
-    exit 1
-  fi
-  # Wait for the name node to be online
-  while ! nc -z $1 50070; do
-    sleep 2;
-  done;
-  # Start HDFS data node
-  sed -i.bak "s|\[NAMENODE_HOST\]|${1}|g" $HADOOP_CONF_DIR/core-site.xml
-  rm -f $HADOOP_CONF_DIR/core-site.xml.bak
-  hadoop-daemon.sh start datanode
-  # Start daemon if specified
-  if [[ "${2}" != 'daemon' ]]; then
-    sleep infinity
-  fi
-}
-
-main "$@"
+# Check user environment variable
+if [[ -z "${HDFS_USER}" ]]; then
+  echo "Missing HDFS_USER environment variable" >&2
+  exit 1
+fi
+# Create user for HDFS
+adduser --no-create-home --disabled-password --gecos "" $HDFS_USER
+# Fix directory permissions
+chown -R $HDFS_USER:$HDFS_USER /opt/hdfs
+chown -R $HDFS_USER:$HDFS_USER $HADOOP_HOME
+# Select node type
+if [[ "${1}" = 'namenode' ]]; then
+  su $HDFS_USER -c "/opt/util/bin/start-hadoop-namenode $2"
+elif [[ "${1}" =  'datanode' ]]; then
+  su $HDFS_USER -c "/opt/util/bin/start-hadoop-datanode $2 $3"
+else
+  echo "Invalid command '${1}'" >&2
+  exit 1
+fi

@@ -5,6 +5,9 @@ if [[ -z "${HDFS_USER}" ]]; then
   echo "Missing HDFS_USER environment variable" >&2
   exit 1
 fi
+# Set HADOOP_USER_NAME environment vairable
+HADOOP_USER_NAME="${HDFS_USER}"
+echo "export  HADOOP_USER_NAME=\"${HDFS_USER}\"" >> /etc/bash.bashrc
 # Create user for HDFS
 adduser --no-create-home --disabled-password --gecos "" $HDFS_USER
 # Fix directory permissions

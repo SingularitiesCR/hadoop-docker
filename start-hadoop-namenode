@@ -14,6 +14,7 @@ fi
 # Start HDFS service
 start-dfs.sh
 # Fix permissions for root directory
+hdfs dfsadmin -safemode leave
 hdfs dfs -chown $HDFS_USER:$HDFS_USER /
 # Start daemon if specified
 if [[ "${1}" != 'daemon' ]]; then

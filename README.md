@@ -3,6 +3,7 @@
 An [Apache Hadoop](http://hadoop.apache.org) container image. This image is meant to be used for creating a standalone cluster with multiple DataNodes.
 
 - [`2.7` (Dockerfile)](https://github.com/SingularitiesCR/hadoop-docker/blob/2.7/Dockerfile)
+- [`2.8` (Dockerfile)](https://github.com/SingularitiesCR/hadoop-docker/blob/2.8/Dockerfile)
 
 ## Custom commands
 

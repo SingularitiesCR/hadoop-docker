@@ -2,7 +2,7 @@ FROM openjdk:8-jre
 MAINTAINER Singularities
 
 # Version
-ENV HADOOP_VERSION=2.7.3
+ENV HADOOP_VERSION=2.7.4
 
 # Set home
 ENV HADOOP_HOME=/usr/local/hadoop-$HADOOP_VERSION

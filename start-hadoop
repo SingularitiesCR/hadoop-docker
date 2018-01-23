@@ -11,10 +11,14 @@ echo "export  HADOOP_USER_NAME=\"${HDFS_USER}\"" >> /etc/bash.bashrc
 # Create user for HDFS
 adduser --no-create-home --disabled-password --gecos "" $HDFS_USER
 # Fix directory permissions
-find /opt/hdfs ! -user $HDFS_USER -print0 | xargs -0 chown $HDFS_USER:$HDFS_USER \
-    > /dev/null 2>&1
-find $HADOOP_HOME ! -user $HDFS_USER -print0 | xargs -0 chown $HDFS_USER:$HDFS_USER \
-    > /dev/null 2>&1
+if ! [[ $(whoami) = $HDFS_USER ]]; then
+  find /opt/hdfs ! -user $HDFS_USER -print0 | xargs -0 chown $HDFS_USER:$HDFS_USER \
+      > /dev/null 2>&1 ;
+  find $HADOOP_HOME ! -user $HDFS_USER -print0 | xargs -0 chown $HDFS_USER:$HDFS_USER \
+      > /dev/null 2>&1 ;
+else
+  echo "\$HDFS_USER is root"
+fi
 # Select node type
 if [[ "${1}" = 'namenode' ]]; then
   su $HDFS_USER -c "/opt/util/bin/start-hadoop-namenode $2"

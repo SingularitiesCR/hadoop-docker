@@ -10,7 +10,7 @@ ENV HADOOP_HOME=/usr/local/hadoop-$HADOOP_VERSION
 # Install dependencies
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install \
-    -yq --no-install-recommends netcat \
+    -yq --no-install-recommends netcat procps \
   && apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 

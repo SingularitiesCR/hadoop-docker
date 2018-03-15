@@ -2,7 +2,7 @@ FROM openjdk:8-jre
 MAINTAINER Singularities
 
 # Version
-ENV HADOOP_VERSION=2.8.2
+ENV HADOOP_VERSION=2.8.3
 
 # Set home
 ENV HADOOP_HOME=/usr/local/hadoop-$HADOOP_VERSION
@@ -40,7 +40,7 @@ RUN sed -i.bak "s/hadoop-daemons.sh/hadoop-daemon.sh/g" \
   && rm -f $HADOOP_HOME/sbin/stop-dfs.sh.bak
 
 # HDFS
-EXPOSE 8020 14000 50070 50470
+EXPOSE 8020 9000 14000 50010 50020 50070 50075 50090 50470 50475
 
 # MapReduce
 EXPOSE 10020 13562	19888
